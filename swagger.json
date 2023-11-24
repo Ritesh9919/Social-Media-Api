@@ -1,0 +1,90 @@
+{
+    "swagger":"2.0",
+    "info":{
+        "version":"1.0.0",
+        "description":"API for social-media",
+        "title":"Social-media API"
+    },
+    "host":"localhost:8000",
+    "paths":{
+        "/api/users/login":{
+            "post":{
+                "summery":"Login",
+                "description":"User Login",
+                "parameters":[
+                   {
+                    "in":"body",
+                    "name":"body",
+                    "description":"User Credentials",
+                    "schema":{
+                        "type":"object",
+                        "properties":{
+                            
+                            "email":{
+                                "type":"string"
+                            },
+                            "password":{
+                                "type":"string"
+                            }
+                        }
+                    }
+
+                   }
+                ],
+                "responses":{
+                    "200":{
+                        "description":"OK"
+                    },
+                    "404":{
+                        "description":"User not found"
+                    },
+                    "401":{
+                        "description":"Invalid Credentials"
+                    }
+
+                }
+            }
+        },
+        "/api/users/register":{
+            "post":{
+                "summery":"Register",
+                "description":"User registration",
+                "parameters":[
+                   {
+                    "in":"body",
+                    "name":"body",
+                    "description":"User Credentials",
+                    "schema":{
+                        "type":"object",
+                        "properties":{
+                            "name":{
+                                "type":"string"
+                            },
+                            "email":{
+                                "type":"string"
+                            },
+                            "password":{
+                                "type":"string"
+                            }
+                        }
+                    }
+
+                   }
+                ],
+                "responses":{
+                    "201":{
+                        "description":"CREATED"
+                    },
+                    "409":{
+                        "description":"User already exist"
+                    },
+                    "400":{
+                        "description":"All fields are required"
+                    }
+
+                }
+            }
+        }
+    }
+
+}

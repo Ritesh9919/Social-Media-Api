@@ -1,48 +1,54 @@
-const User = require("../models/user.model");
+
+import {StatusCodes} from 'http-status-codes';
+import {User} from '../models/user.model.js';
+import {ApiError} from '../utils/apiError.js';
 
 
-const register = async (req, res) => {
-  try {
+
+const register = async (req, res, next) => {
+  
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
-      throw new Error("All fields are required");
+      return next(new ApiError(400, "All fields are required"));
     }
     const isUserExist = await User.findOne({ email });
     if (isUserExist) {
-      throw new Error("User already axist");
+      return next(new ApiError(409, 'User already exist'));
     }
     const user = new User({name, email, password});
     user.save();
     res.status(201).json({ success: true, msg: "User registred successfully" });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal server error" });
-  }
+  
+  
+  
 };
 
 
 
-const login = async(req, res) => {
-    try {
+const login = async(req, res, next) => {
+    
         const {email, password} = req.body;
         const user = await User.findOne({email});
         if(!user) {
-            throw new Error('Invalid Credentials');
+            return next(new ApiError(404, 'User not found'));
         }
-        const isPasswordCorrect = user.comparePassword(password);
+        const isPasswordCorrect = await user.comparePassword(password);
+      
         if(!isPasswordCorrect) {
-            throw new Error('Invalid Credentials');
+          return next(new ApiError(401, 'Invalid Credentials'));
         }
+        
         const accessToken = user.generateAccessToken();
         res.status(200).json({success:true, msg:'Login successfull', accessToken});
-    } catch (error) {
-        res.status(500).json({ error: "Internal server error" });
+    
+    
+    
     }
-}
 
 
 
-module.exports = {
-    register,
-    login
+
+export {
+  register,
+  login
 }
