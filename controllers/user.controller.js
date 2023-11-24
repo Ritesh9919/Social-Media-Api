@@ -22,6 +22,27 @@ const register = async (req, res) => {
 
 
 
+const login = async(req, res) => {
+    try {
+        const {email, password} = req.body;
+        const user = await User.findOne({email});
+        if(!user) {
+            throw new Error('Invalid Credentials');
+        }
+        const isPasswordCorrect = user.comparePassword(password);
+        if(!isPasswordCorrect) {
+            throw new Error('Invalid Credentials');
+        }
+        const accessToken = user.generateAccessToken();
+        res.status(200).json({success:true, msg:'Login successfull', accessToken});
+    } catch (error) {
+        res.status(500).json({ error: "Internal server error" });
+    }
+}
+
+
+
 module.exports = {
-    register
+    register,
+    login
 }
