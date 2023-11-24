@@ -1,5 +1,6 @@
 require('dotenv').config()
 const express = require('express');
+const connectDB = require('./db/mongoose');
 
 const app = express();
 
@@ -10,5 +11,6 @@ app.get('/', (req, res)=> {
 
 
 app.listen(process.env.PORT, ()=> {
-    console.log(`Server is running on port:${process.env.PORT}`)
+    console.log(`Server is running on port:${process.env.PORT}`);
+    connectDB();
 })
