@@ -240,6 +240,7 @@
           "401": {
             "description": "Unauthorized"
           }
+          
         }
       }
     },
@@ -272,6 +273,46 @@
           },
           "401": {
             "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/comment/create": {
+      "post": {
+        "tags": ["Create Comment"],
+        "summery": "Create Comment on post",
+        "description": "Create Comment on post",
+        "security": [{ "jwt": {} }],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Comment Content",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "string"
+                },
+                "post": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "CREATED"
+          },
+          "400": {
+            "description": "Please provide all fields"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Something went wrong!"
           }
         }
       }
