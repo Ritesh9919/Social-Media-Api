@@ -8,8 +8,10 @@ import cors from 'cors';
 import apiDocs from './swagger.json' assert {type:'json'};
 import {connectDB} from './db/mongoose.js';
 import {errorHandlerMiddleware} from './middlewares/error_handler.js';
+import {jwtAuth} from './middlewares/jwtAuth.js';
+import {notFoundErrorHandler} from './middlewares/not_found.js';
 
-// routers
+
 import userRouter from './routes/user.route.js';
 import postRouter from './routes/post.route.js';
 
@@ -19,19 +21,23 @@ const app = express();
 //api documentation
 app.use('/api/docs', swagger.serve, swagger.setup(apiDocs));
 
+
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors());
 
 
+
 app.get('/', (req, res)=> {
-    res.send('Welcome');
+    res.send('<h1>Social-Media API</h1><a href="/api/docs">Documentation</a>');
 })
 
 
+// routes
 app.use('/api/users', userRouter);
-app.use('/api/posts', postRouter);
+app.use('/api/posts', jwtAuth, postRouter);
 
+app.use(notFoundErrorHandler);
 app.use(errorHandlerMiddleware);
 
 

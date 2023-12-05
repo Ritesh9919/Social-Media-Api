@@ -6,9 +6,17 @@
     "title": "Social-media API"
   },
   "host": "localhost:8000",
+  "securityDefinitions": {
+    "jwt": {
+      "in": "header",
+      "name": "Authorization",
+      "type": "apiKey"
+    }
+  },
   "paths": {
     "/api/users/login": {
       "post": {
+        "tags": ["Login"],
         "summery": "Login",
         "description": "User Login",
         "parameters": [
@@ -38,12 +46,16 @@
           },
           "401": {
             "description": "Invalid Credentials"
+          },
+          "500": {
+            "description": "Something went wrong!"
           }
         }
       }
     },
     "/api/users/register": {
       "post": {
+        "tags": ["Register"],
         "summery": "Register",
         "description": "User registration",
         "parameters": [
@@ -76,6 +88,190 @@
           },
           "400": {
             "description": "All fields are required"
+          },
+          "500": {
+            "description": "Something went wrong!"
+          }
+        }
+      }
+    },
+    "/api/posts/create": {
+      "post": {
+        "tags": ["Create Post"],
+        "summery": "Create Post",
+        "description": "Create Post",
+        "security": [{ "jwt": {} }],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Post Content",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "string"
+                },
+                "user": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "CREATED"
+          },
+          "400": {
+            "description": "Please provide all fields"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Something went wrong!"
+          }
+        }
+      }
+    },
+    "/api/posts": {
+      "get": {
+        "tags": ["Get All Posts"],
+        "summery": "Posts",
+        "description": "Get all posts",
+        "security": [{ "jwt": {} }],
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "404": {
+            "description": "Post not found"
+          },
+          "500": {
+            "description": "Something went wrong!"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/posts/{postId}": {
+      "get": {
+        "tags": ["Get Singal Post"],
+        "summery": "Get post by id",
+        "description": "Get Singal post",
+        "security": [{ "jwt": {} }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "postId",
+            "description": "Post Id",
+            "type": "string",
+            "decription": "The post id"
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "404": {
+            "description": "Post not found"
+          },
+          "500": {
+            "description": "Something went wrong!"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/posts/{postId}/update": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "postId",
+          "description": "Post Id",
+          "type": "string",
+          "decription": "The post id"
+        }
+      ],
+
+      "put": {
+        "tags": ["Update Post"],
+        "summery": "Update post by id",
+        "description": "Update Singal post",
+        "security": [{ "jwt": {} }],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "string"
+                },
+                "user": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "404": {
+            "description": "Post not found"
+          },
+          "500": {
+            "description": "Something went wrong!"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/posts/{postId}/delete": {
+      "delete": {
+        "tags": ["Delete Singal Post"],
+        "summery": "Delete post by id",
+        "description": "Delete Singal post",
+        "security": [{ "jwt": {} }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "postId",
+            "description": "Post Id",
+            "type": "string",
+            "decription": "The post id"
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "404": {
+            "description": "Post not found"
+          },
+          "500": {
+            "description": "Something went wrong!"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
