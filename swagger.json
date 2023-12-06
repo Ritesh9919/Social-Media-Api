@@ -5,7 +5,7 @@
     "description": "API for social-media",
     "title": "Social-media API"
   },
-  "host": "https://social-media-bhh7.onrender.com",
+  "host": "social-media-bhh7.onrender.com",
   "securityDefinitions": {
     "jwt": {
       "in": "header",
