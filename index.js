@@ -15,6 +15,7 @@ import {notFoundErrorHandler} from './middlewares/not_found.js';
 import userRouter from './routes/user.route.js';
 import postRouter from './routes/post.route.js';
 import commentRouter from './routes/comment.route.js';
+import likeRouter from './routes/like.route.js';
 
 
 const app = express();
@@ -37,7 +38,8 @@ app.get('/', (req, res)=> {
 // routes
 app.use('/api/users', userRouter);
 app.use('/api/posts', jwtAuth, postRouter);
-app.use('/api/comment', jwtAuth, commentRouter);
+app.use('/api/comments', jwtAuth, commentRouter);
+app.use('/api/likes', jwtAuth, likeRouter);
 
 app.use(notFoundErrorHandler);
 app.use(errorHandlerMiddleware);

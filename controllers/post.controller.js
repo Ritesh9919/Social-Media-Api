@@ -16,7 +16,20 @@ const createPost = async (req, res, next) => {
 
 const getAllPosts = async (req, res, next) => {
   try {
-    const posts = await Post.find().populate("user").populate('comments');
+    const posts = await Post.find()
+      .populate("user")
+      .populate({
+        path: "comments",
+        populate: {
+          path: "user",
+        },
+      })
+      .populate({
+        path:'likes',
+        populate:{
+          path:'user'
+        }
+      })
     if (!posts) {
       return next(new ApiError(404, "Post not found"));
     }
@@ -29,7 +42,14 @@ const getAllPosts = async (req, res, next) => {
 const getSingalPost = async (req, res, next) => {
   try {
     const { postId } = req.params;
-    const post = await Post.findById(postId).populate("user").populate('comments');
+    const post = await Post.findById(postId)
+      .populate("user")
+      .populate({
+        path: "comments",
+        populate: {
+          path: "user",
+        },
+      });
     if (!post) {
       return next(new ApiError(404, "Post not found"));
     }
@@ -42,20 +62,24 @@ const getSingalPost = async (req, res, next) => {
 const updatePost = async (req, res, next) => {
   try {
     const { postId } = req.params;
-      const post = await Post.findByIdAndUpdate(postId, req.body, {
-        new:true,
-        runValidators:true
-      });
-      
-    
-    
 
+    const post = await Post.findById(postId);
     if (!post) {
       return next(new ApiError(404, "Post not found"));
     }
 
-    res.status(200).json({ post, msg: "Post updated successfull" });
+    if (post.user.equals(req.user._id)) {
+      await Post.findByIdAndUpdate(postId, req.body, {
+        new: true,
+        runValidators: true,
+      });
+    } else {
+      return next(new ApiError(400, "You can't update this post"));
+    }
+
+    res.status(200).json({ msg: "Post updated successfull" });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -63,9 +87,14 @@ const updatePost = async (req, res, next) => {
 const deletePost = async (req, res, next) => {
   try {
     const { postId } = req.params;
-    const post = await Post.findByIdAndDelete(postId);
+    const post = await Post.findById(postId);
     if (!post) {
       return next(new ApiError(404, "Post not found"));
+    }
+    if (post.user.equals(req.user._id)) {
+      await Post.findByIdAndDelete(postId);
+    } else {
+      return next(new ApiError(400, "You can't delete this post"));
     }
     res.status(200).json({ post, msg: "Post deleted successfully" });
   } catch (error) {

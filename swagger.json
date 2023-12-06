@@ -316,6 +316,42 @@
           }
         }
       }
+    },
+    "/api/comments/{id}/delete": {
+      "delete": {
+        "tags": ["Delete Comment"],
+        "summery": "Delete comment by id",
+        "description": "Delete comment by id",
+        "security": [{ "jwt": {} }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Comment Id",
+            "type": "string",
+            "decription": "The post id"
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "404": {
+            "description": "Comment not found"
+          },
+          "500": {
+            "description": "Something went wrong!"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400":{
+            "description":"You can't delete this post"
+          }
+        }
+      }
     }
   }
 }
