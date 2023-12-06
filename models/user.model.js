@@ -33,7 +33,7 @@ userSchema.methods.comparePassword = async function(password) {
 }
 
 userSchema.methods.generateAccessToken = function () {
-    const token = jwt.sign({userId:this._id}, process.env.JWT_SECRET, {expiresIn:'1d'});
+    const token = jwt.sign({userId:this._id}, process.env.JWT_SECRET, {expiresIn:process.env.JWT_LIFETIME});
     return token;
 }
 
