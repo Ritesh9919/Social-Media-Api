@@ -352,6 +352,44 @@
           }
         }
       }
+    },
+    "/api/likes/toggle/?id={id}&type={type}": {
+      "post": {
+        "tags": ["Like"],
+        "summery": "Like post and comment",
+        "description": "Like post and comment",
+        "security": [{ "jwt": {} }],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "type":"string"
+            
+          },
+          {
+            "in":"query",
+            "name":"type",
+            "type":"string",
+            "enum":["post","comment"]
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "Request successfull"
+          },
+
+          "500": {
+            "description": "Something went wrong!"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404":{
+            "description":"Not found"
+          }
+        }
+      }
     }
   }
 }

@@ -23,13 +23,19 @@ const getAllPosts = async (req, res, next) => {
         populate: {
           path: "user",
         },
+        populate: {
+          path: "likes",
+          populate: {
+            path: "user",
+          },
+        },
       })
       .populate({
-        path:'likes',
-        populate:{
-          path:'user'
-        }
-      })
+        path: "likes",
+        populate: {
+          path: "user",
+        },
+      });
     if (!posts) {
       return next(new ApiError(404, "Post not found"));
     }
