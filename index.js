@@ -26,7 +26,10 @@ app.use('/api/docs', swagger.serve, swagger.setup(apiDocs));
 
 app.use(express.json());
 app.use(express.urlencoded());
-app.use(cors());
+app.use(cors({
+    methods:['*'],
+    credentials:true
+}));
 
 
 
