@@ -74,6 +74,9 @@
                 },
                 "password": {
                   "type": "string"
+                },
+                "avatar":{
+                  "type":"string"
                 }
               }
             }
@@ -222,6 +225,9 @@
               "properties": {
                 "caption": {
                   "type": "string"
+                },
+                "captionImage":{
+                  "type":"string"
                 },
                 "user": {
                   "type": "string"

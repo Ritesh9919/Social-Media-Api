@@ -1,15 +1,9 @@
 
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/apiError.js";
-// import {uploadOnCloudinary} from '../utils/cloudinary.js';
-
-
-
 
 
 // Auth 
-
-
 
 
 const register = async (req, res, next) => {
@@ -22,16 +16,12 @@ const register = async (req, res, next) => {
       if (isUserExist) {
         return next(new ApiError(409, "User already exist"));
       }
+      console.log(req.files);
+      const avatarLocalPath = req.files?.avatar[0]?.path;
       
-      // const avatarLocalPath = req.files?.avatar[0]?.path;
       
-      // if(!avatarLocalPath) {
-      //   return next(new ApiError(400, 'Avatar file is required'));
-      // }
       
-      // const avatarImage =  await uploadOnCloudinary(avatarLocalPath);
-      
-      const user = new User({ name, email, password});
+      const user = new User({ name, email, password, avatar:avatarLocalPath});
       await user.save();
       res.status(201).json({user,  msg: "User registred successfully" });
     } catch (error) {
