@@ -1,6 +1,7 @@
 import { Like } from "../models/like.model.js";
 import { Post } from "../models/post.model.js";
 import { Comment } from "../models/comment.model.js";
+import {ApiError} from '../utils/apiError.js';
 
 const toogleLike = async (req, res, next) => {
   try {
@@ -43,4 +44,32 @@ const toogleLike = async (req, res, next) => {
   }
 };
 
-export { toogleLike };
+
+const getLikeOnPost = async(req, res, next)=> {
+  try {
+    const {postId} = req.params;
+    const post = await Post.findById(postId);
+    if(!post) {
+      return next(new ApiError(404, 'Post not found'));
+    }
+    res.status(200).json({likes:post.likes});
+  } catch (error) {
+    next(error);
+  }
+}
+
+
+const getLikeOnComment = async(req, res, next)=> {
+  try {
+    const {commentId} = req.params;
+    const comment = await Comment.findById(commentId);
+    if(!comment) {
+      return next(new ApiError(404, 'Comment not found'));
+    }
+    res.status(200).json({likes:comment.likes})
+  } catch (error) {
+    next(error);
+  }
+}
+
+export { toogleLike, getLikeOnPost, getLikeOnComment };

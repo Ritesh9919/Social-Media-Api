@@ -15,7 +15,14 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:true,
         min:[6, 'Password can not be less than 6 character']
-    }
+    },
+    
+    friendships:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Friendship'
+        }
+    ]
 
 },{timestamps:true});
 

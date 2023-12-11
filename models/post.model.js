@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 
 const postSchema = new mongoose.Schema({
-    content:{
+    caption:{
         type:String,
         required:true
     },

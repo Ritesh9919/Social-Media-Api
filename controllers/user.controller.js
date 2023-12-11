@@ -1,43 +1,88 @@
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/apiError.js";
+import {Friendship} from '../models/friendship.model.js';
 
-const register = async (req, res, next) => {
+
+// User Profile
+
+const getAllUsers = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) {
-      return next(new ApiError(400, "All fields are required"));
+    const users = await User.find().select('-password');
+    if (!users) {
+      return next(new ApiError(404, "User not found"));
     }
-    const isUserExist = await User.findOne({ email });
-    if (isUserExist) {
-      return next(new ApiError(409, "User already exist"));
-    }
-    const user = new User({ name, email, password });
-    user.save();
-    res.status(201).json({ msg: "User registred successfully" });
+    res.status(200).json({ users });
   } catch (error) {
     next(error);
   }
 };
 
-const login = async (req, res, next) => {
+
+
+const getUser = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const { userId } = req.params;
+    const user = await User.findById(userId).select('-password');
     if (!user) {
       return next(new ApiError(404, "User not found"));
     }
-    const isPasswordCorrect = await user.comparePassword(password);
+    res.status(200).json({ user });
+  } catch (error) {
+    next(error);
+  }
+};
 
-    if (!isPasswordCorrect) {
-      return next(new ApiError(401, "Invalid Credentials"));
+
+
+const updateUser = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const { name, email, password } = req.body;
+    const user = await User.findById(userId).select('-password');
+    if (!user) {
+      return next(new ApiError(404, "User not found"));
     }
-
-    const accessToken = user.generateAccessToken();
-    res.status(200).json({ msg: "Login successfull", accessToken });
+    user.name = name;
+    user.email = email;
+    user.password = password;
+    await user.save()
+    res.status(200).json({user, msg:'User updated'});
   } catch (error) {
     console.log(error);
     next(error);
   }
 };
 
-export { register, login };
+
+
+
+
+
+const friendship = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(req.user._id);
+    if(!user) {
+        return next(new ApiError(404, 'User not found'));
+    }
+    const friend = await Friendship.create({
+      from_user: req.user._id,
+      to_user: userId,
+    });
+    user.friendships.push(friend);
+    await user.save()
+    res.status(201).json({msg:'Friend added'});
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+
+
+
+
+
+
+export { getAllUsers, getUser, updateUser, friendship };

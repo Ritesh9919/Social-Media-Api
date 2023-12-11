@@ -1,9 +1,14 @@
 import dotenv from  'dotenv';
-dotenv.config();
+
 import express from 'express';
 import swagger from 'swagger-ui-express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
+
+dotenv.config(
+    {path:'./.env'}
+    );
 
 import apiDocs from './swagger.json' assert {type:'json'};
 import {connectDB} from './db/mongoose.js';
@@ -16,6 +21,7 @@ import userRouter from './routes/user.route.js';
 import postRouter from './routes/post.route.js';
 import commentRouter from './routes/comment.route.js';
 import likeRouter from './routes/like.route.js';
+import authRouter from './routes/auth.router.js';
 
 
 const app = express();
@@ -25,11 +31,10 @@ app.use('/api/docs', swagger.serve, swagger.setup(apiDocs));
 
 
 app.use(express.json());
-app.use(express.urlencoded());
-app.use(cors({
-    methods:['*'],
-    credentials:true
-}));
+app.use(express.static('public'));
+app.use(express.urlencoded({extended:true}));
+app.use(cors());
+app.use(cookieParser());
 
 
 
@@ -43,6 +48,7 @@ app.use('/api/users', userRouter);
 app.use('/api/posts', jwtAuth, postRouter);
 app.use('/api/comments', jwtAuth, commentRouter);
 app.use('/api/likes', jwtAuth, likeRouter);
+app.use('/api/auth', authRouter);
 
 app.use(notFoundErrorHandler);
 app.use(errorHandlerMiddleware);
