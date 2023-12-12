@@ -9,8 +9,11 @@ const createPost = async (req, res, next) => {
     if (!caption) {
       return next(new ApiError(400, "Please provide all fields"));
     }
-    console.log(req.files);
-    const captionImageLocalPath = req.files?.captionImage[0]?.path;
+    
+    const captionImageLocalPath = `temp/${req.files?.captionImage[0]?.filename}`;
+    console.log(captionImageLocalPath);
+
+
     
 
     const post = await Post.create({ caption, user: req.user._id, captionImage:captionImageLocalPath });
