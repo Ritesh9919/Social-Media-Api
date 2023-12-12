@@ -391,7 +391,7 @@
         }
       }
     },
-    "/api/comment/create": {
+    "/api/comments/create": {
       "post": {
         "tags": ["Create Comment"],
         "summery": "Create Comment on post",
