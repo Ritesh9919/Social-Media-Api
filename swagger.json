@@ -254,6 +254,30 @@
     },
     "/api/posts": {
       "get": {
+        "tags": ["Get All Posts by user"],
+        "summery": "Posts",
+        "description": "Get all posts by user",
+        "security": [{ "jwt": {} }],
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "404": {
+            "description": "Post not found"
+          },
+          "500": {
+            "description": "Something went wrong!"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/posts/all": {
+      "get": {
         "tags": ["Get All Posts"],
         "summery": "Posts",
         "description": "Get all posts",
