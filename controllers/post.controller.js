@@ -2,6 +2,9 @@ import { ApiError } from "../utils/apiError.js";
 import { Post } from "../models/post.model.js";
 import { User } from "../models/user.model.js";
 import {Comment} from '../models/comment.model.js';
+import path from 'path';
+
+
 
 const createPost = async (req, res, next) => {
   try {
@@ -10,13 +13,16 @@ const createPost = async (req, res, next) => {
       return next(new ApiError(400, "Please provide all fields"));
     }
     
-    const captionImageLocalPath = `temp/${req.files?.captionImage[0]?.filename}`;
-    console.log(captionImageLocalPath);
+    if(!req.file) {
+      return next(404, 'image is requred');
+    }
 
+
+    const postUrl = 'temp/' + req.file.filename;
 
     
 
-    const post = await Post.create({ caption, user: req.user._id, captionImage:captionImageLocalPath });
+    const post = await Post.create({ caption, user: req.user._id, captionImage:postUrl });
     res.status(201).json({post, msg: "Post created" });
   } catch (error) {
     console.log(error);

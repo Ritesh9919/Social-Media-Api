@@ -16,18 +16,20 @@ const register = async (req, res, next) => {
       if (isUserExist) {
         return next(new ApiError(409, "User already exist"));
       }
-      console.log(req.files);
-      const avatarLocalPath = req.files?.avatar[0]?.path;
       
+      console.log(req.file);
+      if(!req.file) {
+        return next(new ApiError(404, 'Image is required'));
+      }  
       
+      const imageUrl = 'temp/' + req.file.filename;
       
-      const user = new User({ name, email, password, avatar:avatarLocalPath});
+      const user = new User({ name, email, password, avatar:imageUrl});
       await user.save();
       res.status(201).json({user,  msg: "User registred successfully" });
     } catch (error) {
       console.log(error);
-      
-      next(error);
+       next(error);
     }
   };
   

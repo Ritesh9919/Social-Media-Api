@@ -4,6 +4,7 @@ import express from 'express';
 import swagger from 'swagger-ui-express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 
 
 dotenv.config(
